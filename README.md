@@ -2,8 +2,8 @@ reducto
 =======
 
 The goal of this project is to use linear algebra matrix operations to 
-<a href="https://www.youtube.com/watch?v=vtu-7xvN7mw">shrink</a> large datasets. The specific 
-<a href="http://www.cs.uakron.edu/~zduan/class/635/projects/project2/project2.pdf">requirements</a> consist of two 
+[shrink]("https://www.youtube.com/watch?v=vtu-7xvN7mw") large datasets. The specific 
+[requirements]("http://www.cs.uakron.edu/~zduan/class/635/projects/project2/project2.pdf") consist of two 
 major parts: image compression and dimensionality reduction. Image compression is accomplished by using singular 
 value decomposition (SVD), and high-dimensional dataset dimensionality reduction is accomplished by using principal 
 component analysis (PCA). 
@@ -11,7 +11,7 @@ component analysis (PCA).
 ### Part I: Image Compression
 
 The most important operation used in this section is 
-<a href="http://en.wikipedia.org/wiki/Singular_value_decomposition">singular value decomposition</a> (SVD). A 
+[singular value decomposition]("http://en.wikipedia.org/wiki/Singular_value_decomposition") (SVD). A 
 singular value decomposition of an _m_ by _n_ matrix _M_ is a factorization of the form M=UΣV*, where
   * U is an _m_ by _m_ unitary matrix
   * Σ is an _m_ by _n_ rectangular diagonal matrix with nonnegative numbers on the diagonal, and
@@ -66,7 +66,7 @@ image, named image_k.pgm, that can be viewed using any pgm viewer.
 ### Part II: Dimensionality Reduction
 
 The most important algorithm used in this section is 
-<a href="http://en.wikipedia.org/wiki/Principal_component_analysis">principal component analysis</a> (PCA). It is a 
+[principal component analysis]("http://en.wikipedia.org/wiki/Principal_component_analysis") (PCA). It is a 
 statistical procedure that uses orthogonal transformation to convert a set of observations of possibly correlated 
 variables into a set of values of linearly uncorrelated variables called principal components. It's commonly used for
 dimensionality reduction for visualization of high-dimensional datasets.
