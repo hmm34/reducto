@@ -1,7 +1,7 @@
 # This is a makefile that Heather made. Heather doesn't know a whole lot about
 # makefiles. There should be _great care_ taken when using this makefile. It
 # is dangerous.
-CPPFLAGS=-Wall -std=c++0x
+CPPFLAGS=-Wall -std=c++11
 BIN=bin
 SRC=src
 
