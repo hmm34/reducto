@@ -8,11 +8,10 @@
 #include <iostream>
 #include <cstdlib>
 
-std::string ex = "some" "other";
-std::string usage =  "Expected usage: \n"
-							"\treducto 1 <image.pgm> \n"
-							"\treducto 2 <image_b.pgm> \n" 
-							"\treducto 3 <header.txt> <SVD.txt> k \n"
+std::string usage =  "Expected usage: \n"\
+							"\treducto 1 <image.pgm> \n"\
+							"\treducto 2 <image_b.pgm> \n"\
+							"\treducto 3 <header.txt> <SVD.txt> k \n"\
 							"\treducto 4 <image_b.pgm.SVD> \n";
 
 const std::string ASCII_TO_BINARY = "1";
