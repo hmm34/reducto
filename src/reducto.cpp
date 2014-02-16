@@ -1,6 +1,7 @@
 /*
-	@brief Command line interface that executes various linear algebra operations, such as SVD or PCA to compress
-	images and reduce high-dimensional data to less dimensions.
+	@brief Command line interface that executes various linear algebra 
+	operations, such as SVD or PCA to compress images and reduce high-dimensional
+	data to less dimensions.
 
 	@copyright 2014 Drew Guarnera, Heather Michaud
 */
@@ -8,11 +9,11 @@
 #include <iostream>
 #include <cstdlib>
 
-std::string usage =  "Expected usage: \n"\
-							"\treducto 1 <image.pgm> \n"\
-							"\treducto 2 <image_b.pgm> \n"\
-							"\treducto 3 <header.txt> <SVD.txt> k \n"\
-							"\treducto 4 <image_b.pgm.SVD> \n";
+std::string usage = "Expected usage: \n"\
+                    "\treducto 1 <image.pgm> \n"\
+                    "\treducto 2 <image_b.pgm> \n"\
+                    "\treducto 3 <header.txt> <SVD.txt> k \n"\
+                    "\treducto 4 <image_b.pgm.SVD> \n";
 
 const std::string ASCII_TO_BINARY = "1";
 const std::string BINARY_TO_ASCII = "2";
