@@ -31,6 +31,23 @@ void runStorageTests()
 void runUnitTests()
 {
 	std::cout << "---------------- Unit Tests -----------------\n";
+
+	/*
+	char* pgmFile = "image.pgm";
+	reducto::asciiToBinary(pgmFile);
+
+	char* binaryFile = "image_b.pgm";
+	reducto::binaryToAscii(binaryFile);
+
+	char* pgmFile2 = "image.pgm";
+	char* headerFile = "header.txt";
+	char* svdFile = "SVD.txt";
+	int k = 2;
+	reducto::compressFile(pgmFile2, headerFile, svdFile, k);
+
+	char* svdFile "image2.pgm.svd";
+	reducto::decompressFile(svdFile);
+	*/
 }
 
 int main(int argc, char const *argv[])
