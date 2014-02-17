@@ -34,7 +34,7 @@ P2
 4 5
 255
 234 23 12 345 22 11 22 11 22 1
-0 1 2 3 4 5 6 7 8 9 10
+1 2 3 4 5 6 7 8 9 10
 </pre> </p>
 
 then the file will be saved using 2 + 2 + 1 + (4 * 5) = 25 bytes. The comment is not preserved. The output is a 
