@@ -69,7 +69,7 @@ The most important algorithm used in this section is
 [principal component analysis](http://en.wikipedia.org/wiki/Principal_component_analysis) (PCA). It is a 
 statistical procedure that uses orthogonal transformation to convert a set of observations of possibly correlated 
 variables into a set of values of linearly uncorrelated variables called principal components. It's commonly used for
-dimensionality reduction for visualization of high-dimensional datasets. See [issue #6](https://github.com/hmm34/reducto/issues/6)
+dimensionality reduction for visualization of high-dimensional datasets. See [issue #5](https://github.com/hmm34/reducto/issues/5)
 
 
 ### Testing
