@@ -31,7 +31,7 @@ namespace reducto
 {
 	//! @brief Convert a provided PGM file in ASCII format to a binary file
 	//! @param file The PGM file in ASCII format
-	void asciiToBinary(char* file)
+	void asciiToBinary(std::string file)
 	{
 		std::string line;
 		std::ifstream inputFile(file);
@@ -42,11 +42,11 @@ namespace reducto
 		while (std::getline(inputFile, line))
 		{
 			std::istringstream iss(line);
-			++lineNum;
 			while (iss >> value) 
 			{
-				if (lineNum == 3)
+				if (++lineNum == 1)
 				{
+					// Only the width and the height get two bytes
 					if (value > 255)
 					{
 						buffer.push_back(value / 256);
@@ -58,12 +58,30 @@ namespace reducto
 						buffer.push_back(value);	
 					}
 				}
-				else {
+				else if (lineNum == 3)
+				{
+					// Ignore possible comment line
+					if (iss.str().find("#") != std::string::npos)
+					{
+						buffer.push_back(value);
+					}
+				}
+				else 
+				{
 					buffer.push_back(value);
 				}
 			}
 		}
 
+		// Write to output file image_b.pgm
+		int lastIndex = file.find_last_of(".");
+		std::string oFile = file.substr(0, lastIndex) + "_b.pgm";
+		std::ofstream outputFile(oFile, std::ofstream::binary);
+		for (int i = 0; i < buffer.size(); ++i)
+			outputFile.write((char*)&buffer[i], sizeof(buffer[i]));
+		outputFile.close();
+
+		// Write to console for debugging purposes
 		for (int i = 0; i < buffer.size(); ++i)
 			std::cerr << buffer[i] << " ";
 		
@@ -102,9 +120,7 @@ int main(int argc, const char* argv[])
 	{
 		if (!areValidArguments(argc, 3))
 			return 2;
-
-		// file is the PGM image to convert to binary
-		// Do things!
+		reducto::asciiToBinary(file);
 	}
 	else if (option == BINARY_TO_ASCII)
 	{
