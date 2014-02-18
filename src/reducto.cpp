@@ -7,9 +7,13 @@
 */
 
 #include <iostream>
-#include <ifstream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
 #include <sstream>
 #include <cstdlib>
+#include <stdlib.h>
 
 std::string usage = "Expected usage: \n"\
                     "\treducto 1 <image.pgm> \n"\
@@ -29,7 +33,41 @@ namespace reducto
 	//! @param file The PGM file in ASCII format
 	void asciiToBinary(char* file)
 	{
+		std::string line;
+		std::ifstream inputFile(file);
+		int value;
+		int lineNum = 0;
+		std::vector<unsigned int> buffer;
+
+		while (std::getline(inputFile, line))
+		{
+			std::istringstream iss(line);
+			++lineNum;
+			while (iss >> value) 
+			{
+				if (lineNum == 3)
+				{
+					if (value > 255)
+					{
+						buffer.push_back(value / 256);
+						buffer.push_back(value % 256);
+					}
+					else
+					{
+						buffer.push_back(0);
+						buffer.push_back(value);	
+					}
+				}
+				else {
+					buffer.push_back(value);
+				}
+			}
+		}
+
+		for (int i = 0; i < buffer.size(); ++i)
+			std::cerr << buffer[i] << " ";
 		
+		std::cerr << "\n";
 	}
 }
 
