@@ -7,6 +7,8 @@
 */
 
 #include <iostream>
+#include <ifstream>
+#include <sstream>
 #include <cstdlib>
 
 std::string usage = "Expected usage: \n"\
@@ -19,6 +21,17 @@ const std::string ASCII_TO_BINARY = "1";
 const std::string BINARY_TO_ASCII = "2";
 const std::string COMPRESS_PGM    = "3";
 const std::string DECOMPRESS_PGM  = "4";
+
+//! @brief All of the main required tooling is namespaced under reducto
+namespace reducto
+{
+	//! @brief Convert a provided PGM file in ASCII format to a binary file
+	//! @param file The PGM file in ASCII format
+	void asciiToBinary(char* file)
+	{
+		
+	}
+}
 
 //! @brief Verifies that there are the expected number of arguments and, if
 //! 	not, returns false
