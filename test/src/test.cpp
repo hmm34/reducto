@@ -8,6 +8,9 @@
 #include <cstdlib>
 #include <fstream>
 #include <time.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>
 #include "../../src/tools.hpp"
 
 const std::string testUsage = "Expected usage: \n"\
@@ -134,6 +137,34 @@ void runStorageTests()
 {
 	std::cout << "-------------- Storage Metrics --------------\n";
 	// Run storage tests and write to a CSV file [with AVERAGES - not all tests..]
+
+	std::string resultFile = "storage-results.csv";
+	std::ofstream output(resultFile);
+	output << "total pixels, size of ascii file (bytes), size of compressed binary file (bytes)\n";
+
+	std::string test = "test.pgm";
+	int maxSize = 1000;
+	for (int size = 50; size <= maxSize; size+=50)
+	{
+		output << size * size << ", ";
+
+		createPGM(test.c_str(), size, size);
+		struct stat ifilestatus;
+		stat(test.c_str(), &ifilestatus);
+		output << ifilestatus.st_size << ", ";
+		reducto::asciiToBinary(test);
+		remove(test.c_str());
+
+		std::string oFile = "test_b.pgm";
+		struct stat ofilestatus;
+		stat(oFile.c_str(), &ofilestatus);
+		output << ofilestatus.st_size << "\n";
+		remove(oFile.c_str());
+
+		std::cerr << "Storage: " << size << " of " << maxSize << "\r";
+	}
+	std::cerr << "\n";
+	output.close();
 }
 
 //! @brief Executes a series of unit tests for verification
