@@ -64,8 +64,10 @@ namespace reducto
 		outputFile.close();
 
 		// Write to console for debugging purposes
+		/*
 		for (int i = 0; i < buffer.size(); ++i)
 			std::cerr << buffer[i] << " ";
 		std::cerr << "\n";
+		*/
 	}
 }
