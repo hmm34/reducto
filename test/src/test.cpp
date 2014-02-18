@@ -5,6 +5,8 @@
 */
 
 #include <iostream>
+#include <cstdlib>
+#include <fstream>
 
 const std::string testUsage = "Expected usage: \n"\
 							 "\ttest : runs all test cases\n"\
@@ -59,6 +61,30 @@ std::string pgmFiles[] = {
 	"test/fixtures/venus2.ascii.pgm",
 	"test/fixtures/x31_f18.ascii.pgm"
 };
+
+//! @brief Creates a randomly generated PGM file with specified width and height
+void createPGM(char* file, int width, int height)
+{
+	int seed = 0;
+
+	std::ofstream output(file);
+	output << "P2\n";
+	output << "# I will make you teensy!\n";
+	output << width << " " << height << "\n";
+	output << "255\n";
+	for (int columns = 0; columns < width; ++columns)
+	{
+		for (int rows = 0; rows < height; ++rows)
+		{
+			srand(seed++);
+			output << rand() % 255 + 1;
+			if (rows != height - 1)
+				output << " ";
+		}
+		output << "\n";
+	}
+	output.close();
+}
 
 //! @brief Executes a series of timing tests for metric collection
 void runTimingTests()
