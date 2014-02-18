@@ -7,6 +7,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
+#include <time.h>
+#include "../../src/tools.hpp"
 
 const std::string testUsage = "Expected usage: \n"\
 							 "\ttest : runs all test cases\n"\
@@ -63,7 +65,7 @@ std::string pgmFiles[] = {
 };
 
 //! @brief Creates a randomly generated PGM file with specified width and height
-void createPGM(char* file, int width, int height)
+void createPGM(std::string file, int width, int height)
 {
 	int seed = 0;
 
@@ -91,6 +93,40 @@ void runTimingTests()
 {
 	std::cout << "-------------- Timing Metrics ---------------\n";
 	// Run timing tests and write to a CSV file [with AVERAGES - not all tests..]
+
+	std::string resultFile = "timing-results.csv";
+	std::ofstream output(resultFile);
+	output << "width, height, total pixels, average time (of 10 runs) in ms\n";
+
+	std::string test = "test.pgm";
+	int maxSize = 500;
+	for (int size = 50; size <= maxSize; size+=50)
+	{
+		long double msTotal = 0;
+		int numRuns = 10;
+		for (int times = 0; times < numRuns; ++times)
+		{
+			createPGM(test.c_str(), size, size);
+
+			std::clock_t start = std::clock();
+			reducto::asciiToBinary(test);
+			std::clock_t end = std::clock();
+
+			remove(test.c_str());
+			msTotal += 1000.0 * (end - start) / CLOCKS_PER_SEC; // time in ms
+		}
+		std::cerr << "Timing: " << size << " of " << maxSize << "\r";
+
+		double average = msTotal / (double)numRuns;
+		output << size << ", " << size << ", " << size * size << ", " << average << "\n";
+	}
+	std::cerr << "\n";
+
+	// Clean up
+	int lastIndex = test.find_last_of(".");
+	std::string oFile = test.substr(0, lastIndex) + "_b.pgm";
+	remove(oFile.c_str());
+	output.close();
 }
 
 //! @brief Executes a series of storage tests for metric collection
