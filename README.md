@@ -24,7 +24,7 @@ singular value decomposition of an _m_ by _n_ matrix _M_ is a factorization of t
 
 Saves the necessary information for the PGM image in ASCII PGM format using binary encoding, without preserving 
 comments. 2 bytes are used to save the width of the image, 2 bytes are used to save the height are the image, 1 byte 
-is used to save the grey scale, and 1 byte is used for the grey level of each pixel. See issue #6.
+is used to save the grey scale, and 1 byte is used for the grey level of each pixel. See [issue #6](https://github.com/hmm34/reducto/issues/6).
 
 For example, if the image.pgm contains:
 
@@ -44,7 +44,7 @@ binary file named image_b.pgm.
 ##### `reducto 2 image_b.pgm`
 
 Reverses the previous command. Converts a binary file, image_b.pgm, to an ASCII PGM file. The original comment is not
-preserved, and the new comment is "# Back off! I will make you teensy!". The outupt file is saved as image2.pgm. See issue #7.
+preserved, and the new comment is "# Back off! I will make you teensy!". The outupt file is saved as image2.pgm. See [issue #7](https://github.com/hmm34/reducto/issues/7).
 
 
 ##### `reducto 3 header.txt SVD.txt k`
@@ -54,13 +54,13 @@ original image, three matrices U, Σ, V, and an integer k representing the rank 
 is named image_b.pgsm.SVD, is recoverable, and can be viewed using any PGM viewer. The goal is to save storage.
 
 The header.txt contains three integers (width, height, grey scale levels). The SVD.txt contains three matrices (U, Σ,
-V). See issue #8.
+V). See [issue #8](https://github.com/hmm34/reducto/issues/8).
 
 
 ##### `reducto 4 image_b.pgm.SVD`
 
 Reverses the previous command. Takes a PGM image that was compressed using SVD and outputs an uncompressed PGM 
-image, named image_k.pgm, that can be viewed using any pgm viewer. See issue #9.
+image, named image_k.pgm, that can be viewed using any pgm viewer. See [issue #9](https://github.com/hmm34/reducto/issues/9).
 
 
 ### Part II: Dimensionality Reduction
@@ -69,7 +69,7 @@ The most important algorithm used in this section is
 [principal component analysis](http://en.wikipedia.org/wiki/Principal_component_analysis) (PCA). It is a 
 statistical procedure that uses orthogonal transformation to convert a set of observations of possibly correlated 
 variables into a set of values of linearly uncorrelated variables called principal components. It's commonly used for
-dimensionality reduction for visualization of high-dimensional datasets. See issue #5.
+dimensionality reduction for visualization of high-dimensional datasets. See [issue #6](https://github.com/hmm34/reducto/issues/6)
 
 
 ### Testing
