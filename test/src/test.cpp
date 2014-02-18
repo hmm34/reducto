@@ -12,6 +12,53 @@ const std::string testUsage = "Expected usage: \n"\
 							 "\ttest timing : runs timing metrics\n"\
 							 "\ttest unit : runs unit tests\n";
 
+std::string pgmFiles[] = {
+	"test/fixtures/2DGel-2.pgm",
+	"test/fixtures/FEEP.pgm",
+	"test/fixtures/apollonian_gasket.ascii.pgm",
+	"test/fixtures/baboon.ascii.pgm",
+	"test/fixtures/balloons.ascii.pgm",
+	"test/fixtures/balloons_noisy.ascii.pgm",
+	"test/fixtures/barbara.ascii.pgm",
+	"test/fixtures/body1.ascii.pgm",
+	"test/fixtures/body2.ascii.pgm",
+	"test/fixtures/body3.ascii.pgm",
+	"test/fixtures/brain_398.ascii.pgm",
+	"test/fixtures/brain_492.ascii.pgm",
+	"test/fixtures/brain_508.ascii.pgm",
+	"test/fixtures/brain_604.ascii.pgm",
+	"test/fixtures/casablanca.ascii.pgm",
+	"test/fixtures/coins.ascii.pgm",
+	"test/fixtures/columns.ascii.pgm",
+	"test/fixtures/columns.pgm",
+	"test/fixtures/dla.ascii.pgm",
+	"test/fixtures/dragon.ascii.pgm",
+	"test/fixtures/f14.ascii.pgm",
+	"test/fixtures/feep.ascii.pgm",
+	"test/fixtures/fractal_tree.ascii.pgm",
+	"test/fixtures/gator.ascii.pgm",
+	"test/fixtures/glassware_noisy.ascii.pgm",
+	"test/fixtures/hands.ascii.pgm",
+	"test/fixtures/handsmat.ascii.pgm",
+	"test/fixtures/lena.ascii.pgm",
+	"test/fixtures/marcie.ascii.pgm",
+	"test/fixtures/mona_lisa.ascii.pgm",
+	"test/fixtures/mother_daughter.ascii.pgm",
+	"test/fixtures/mountain.ascii.pgm",
+	"test/fixtures/pbmlib.ascii.pgm",
+	"test/fixtures/pepper.ascii.pgm",
+	"test/fixtures/roi_14.ascii.pgm",
+	"test/fixtures/saturn.ascii.pgm",
+	"test/fixtures/screws.ascii.pgm",
+	"test/fixtures/snap.ascii.pgm",
+	"test/fixtures/surf.ascii.pgm",
+	"test/fixtures/totem.ascii.pgm",
+	"test/fixtures/tracks.ascii.pgm",
+	"test/fixtures/tracks.pgm",
+	"test/fixtures/venus1.ascii.pgm",
+	"test/fixtures/venus2.ascii.pgm",
+	"test/fixtures/x31_f18.ascii.pgm"
+};
 
 //! @brief Executes a series of timing tests for metric collection
 void runTimingTests()
