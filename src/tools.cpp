@@ -19,7 +19,7 @@ namespace reducto
 		std::ifstream inputFile(file);
 		int value;
 		int lineNum = 0;
-		std::vector<char> buffer;
+		std::vector<unsigned char> buffer;
 
 		while (std::getline(inputFile, line))
 		{
