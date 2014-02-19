@@ -58,7 +58,7 @@ namespace reducto
 
 		// Write to output file image_b.pgm
 		int lastIndex = file.find_last_of(".");
-		std::string oFile = file.substr(0, lastIndex) + "_b.bin";
+		std::string oFile = file.substr(0, lastIndex) + "_b.pgm";
 		std::ofstream outputFile(oFile, std::ofstream::binary);
 		for (int i = 0; i < buffer.size(); ++i)
 			outputFile.write((char*)&buffer[i], sizeof(buffer[i]));

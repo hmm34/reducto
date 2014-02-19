@@ -155,7 +155,7 @@ void runStorageTests()
 		reducto::asciiToBinary(test);
 		remove(test.c_str());
 
-		std::string oFile = "test_b.bin";
+		std::string oFile = "test_b.pgm";
 		struct stat ofilestatus;
 		stat(oFile.c_str(), &ofilestatus);
 		output << ofilestatus.st_size << "\n";
