@@ -79,13 +79,29 @@ namespace reducto
  		inputFile.read (memblock, size);
  		inputFile.close();
 
- 		std::cerr << "size is: " << size << "\n";
-	    for (int i = 0; i < size; ++i)
-	    {
-	    	int num = memblock[i];
-	    	std::cerr << num << " ";
-	    }
-	    std::cerr << "\n";
+ 		int lastIndex = file.find_last_of("_");
+ 		std::string oFile = file.substr(0, lastIndex) + "2.pgm";
+ 		std::ofstream outputFile(oFile);
+
+ 		int width = (int)memblock[0] * 256 + (int)memblock[1];
+ 		int height = (int)memblock[2] * 256 + (int)memblock[3];
+ 		int maxPixel = memblock[4];
+
+ 		outputFile << "P2\n";
+ 		outputFile << "# I will make you teensy!\n";
+ 		outputFile << width << " " << height << "\n";
+ 		outputFile << maxPixel << "\n";
+
+ 		for (int index = 0; index < width * height; ++index)
+ 		{
+ 			if ((index % width == 0) && index > 0)
+ 			{
+ 				outputFile << "\n";
+ 			}
+ 			int num = memblock[5 + index];
+ 			outputFile << num << " ";
+ 		}
 	    delete[] memblock;
+	    outputFile.close();
 	}
 }
