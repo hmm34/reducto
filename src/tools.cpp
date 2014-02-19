@@ -24,13 +24,20 @@ namespace reducto
 
 		while (std::getline(inputFile, line))
 		{
+			++lineNum;
 			std::istringstream iss(line);
 			while (iss >> value) 
 			{
-				if (++lineNum == 1)
+				if (lineNum <= 3)
 				{
+					// Ignore possible comment line
+					if (iss.str().find("#") != std::string::npos)
+					{
+						buffer.push_back(value);
+					}
+
 					// Only the width and the height get two bytes
-					if (value > 255)
+					else if (value > 255)
 					{
 						buffer.push_back(value / 256);
 						buffer.push_back(value % 256);
@@ -39,14 +46,6 @@ namespace reducto
 					{
 						buffer.push_back(0);
 						buffer.push_back(value);	
-					}
-				}
-				else if (lineNum == 3)
-				{
-					// Ignore possible comment line
-					if (iss.str().find("#") != std::string::npos)
-					{
-						buffer.push_back(value);
 					}
 				}
 				else 
@@ -79,14 +78,28 @@ namespace reducto
 
 	void binaryToAscii(std::string file)
 	{
-		unsigned char cwidth;
-		unsigned char cheight;
 
-		std::ifstream inputFile(file, std::ifstream::binary);
-		inputFile.read((char*)&cwidth, sizeof(cwidth));
-		inputFile.read((char*)&cheight, sizeof(cheight));
+		std::ifstream inputFile(file, std::ifstream::binary | std::ifstream::ate);
 
-		std::cerr << "cwidth = " << cwidth << ", cheieght = " << cheight << "\n";
+ 		std::streampos size = inputFile.tellg();
+	    char* memblock = new char [size];
+	    inputFile.seekg (0, std::ios::beg);
+	    inputFile.read (memblock, size);
+	    inputFile.close();
+
+	    std::cerr << "size is: " << size << "\n";
+
+	    int width = memblock[1];
+
+	    for (int i = 0; i < size; ++i)
+	    {
+	    	int num = memblock[i];
+	    	std::cerr << num << " ";
+
+	    }
+	    std::cerr << memblock << "\n";
+
+	    delete[] memblock;
 
 		/*
 		int width = atoi(cwidth);
