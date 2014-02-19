@@ -10,6 +10,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <stdlib.h>
+#include <stdio.h>
 
 namespace reducto
 {
@@ -71,11 +72,27 @@ namespace reducto
 		*/
 	}
 
-	void binaryToAscii(std::string file) {
-		//STUBB
-	}
+  void compareBinaryToAscii(std::string asciiFile, std::string binaryFile) {
+  }
 
-	void compareBinaryToAscii(std::string asciiFile, std::string binaryFile) {
-		//STUBB
+
+	void binaryToAscii(std::string file)
+	{
+		unsigned char cwidth;
+		unsigned char cheight;
+
+		std::ifstream inputFile(file, std::ifstream::binary);
+		inputFile.read((char*)&cwidth, sizeof(cwidth));
+		inputFile.read((char*)&cheight, sizeof(cheight));
+
+		std::cerr << "cwidth = " << cwidth << ", cheieght = " << cheight << "\n";
+
+		/*
+		int width = atoi(cwidth);
+		int height = atoi(cheight);
+
+		std::cerr << "width = " << width << ", height = " << height << "\n";
+		*/
+		
 	}
 }

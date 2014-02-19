@@ -58,9 +58,7 @@ int main(int argc, const char* argv[])
 	{
 		if (!areValidArguments(argc, 3))
 			return 3;
-
-		// file is the binary file to convert to PGM
-		// Do things!
+		reducto::binaryToAscii(file);
 	}
 	else if (option == COMPRESS_PGM)
 	{
