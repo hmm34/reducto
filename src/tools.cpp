@@ -72,10 +72,10 @@ namespace reducto
 	}
 
 	void binaryToAscii(std::string file) {
-
+		//STUBB
 	}
 
 	void compareBinaryToAscii(std::string asciiFile, std::string binaryFile) {
-
+		//STUBB
 	}
 }
