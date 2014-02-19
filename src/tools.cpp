@@ -62,13 +62,6 @@ namespace reducto
 		for (int i = 0; i < buffer.size(); ++i)
 			outputFile.write((char*)&buffer[i], sizeof(buffer[i]));
 		outputFile.close();
-
-		// Write to console for debugging purposes
-		/*
-		for (int i = 0; i < buffer.size(); ++i)
-			std::cerr << buffer[i] << " ";
-		std::cerr << "\n";
-		*/
 	}
 
   	void compareBinaryToAscii(std::string asciiFile, std::string binaryFile) 
@@ -78,35 +71,21 @@ namespace reducto
 
 	void binaryToAscii(std::string file)
 	{
-
 		std::ifstream inputFile(file, std::ifstream::binary | std::ifstream::ate);
 
  		std::streampos size = inputFile.tellg();
-	    char* memblock = new char [size];
-	    inputFile.seekg (0, std::ios::beg);
-	    inputFile.read (memblock, size);
-	    inputFile.close();
+ 		char* memblock = new char [size];
+ 		inputFile.seekg (0, std::ios::beg);
+ 		inputFile.read (memblock, size);
+ 		inputFile.close();
 
-	    std::cerr << "size is: " << size << "\n";
-
-	    int width = memblock[1];
-
+ 		std::cerr << "size is: " << size << "\n";
 	    for (int i = 0; i < size; ++i)
 	    {
 	    	int num = memblock[i];
 	    	std::cerr << num << " ";
-
 	    }
-	    std::cerr << memblock << "\n";
-
+	    std::cerr << "\n";
 	    delete[] memblock;
-
-		/*
-		int width = atoi(cwidth);
-		int height = atoi(cheight);
-
-		std::cerr << "width = " << width << ", height = " << height << "\n";
-		*/
-		
 	}
 }
