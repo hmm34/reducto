@@ -72,8 +72,9 @@ namespace reducto
 		*/
 	}
 
-  void compareBinaryToAscii(std::string asciiFile, std::string binaryFile) {
-  }
+  	void compareBinaryToAscii(std::string asciiFile, std::string binaryFile) 
+  	{
+  	}
 
 
 	void binaryToAscii(std::string file)
