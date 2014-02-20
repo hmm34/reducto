@@ -83,9 +83,16 @@ namespace reducto
  		std::string oFile = file.substr(0, lastIndex) + "2.pgm";
  		std::ofstream outputFile(oFile);
 
- 		int width = (int)memblock[0] * 256 + (int)memblock[1];
- 		int height = (int)memblock[2] * 256 + (int)memblock[3];
- 		int maxPixel = memblock[4];
+ 		unsigned char cwidth1 = memblock[0];
+ 		unsigned char cwidth2 = memblock[1];
+ 		int width = cwidth1 * 256 + cwidth2;
+
+ 		unsigned char cheight1 = memblock[2];
+ 		unsigned char cheight2 = memblock[3];
+ 		int height = cheight1 * 256 + cheight2;
+
+ 		unsigned char cmaxPixel = memblock[4];
+ 		int maxPixel = cmaxPixel;
 
  		outputFile << "P2\n";
  		outputFile << "# I will make you teensy!\n";
@@ -94,12 +101,17 @@ namespace reducto
 
  		for (int index = 0; index < width * height; ++index)
  		{
- 			if ((index % width == 0) && index > 0)
+ 			unsigned char cnum = memblock[5 + index];
+ 			int num = cnum;
+ 			outputFile << num;
+ 			if (((index + 1) % width == 0) && index > 0)
  			{
  				outputFile << "\n";
  			}
- 			int num = memblock[5 + index];
- 			outputFile << num << " ";
+ 			else
+ 			{
+ 				outputFile << " ";
+ 			}
  		}
 	    delete[] memblock;
 	    outputFile.close();
