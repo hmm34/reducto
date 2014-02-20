@@ -152,26 +152,36 @@ void runStorageTests()
 
 	std::string resultFile = "storage-results.csv";
 	std::ofstream output(resultFile);
-	output << "total pixels, size of ascii file (bytes), size of compressed binary file (bytes)\n";
+	output << "total pixels, size of ascii file (bytes), ";
+	output << "size of compressed binary file (bytes), ";
+	output << "size of decompressed ascii file (bytes)\n";
 
-	std::string test = "test.pgm";
+	std::string test1 = "test.pgm";
 	int maxSize = 1000;
 	for (int size = 50; size <= maxSize; size+=50)
 	{
 		output << size * size << ", ";
 
-		createPGM(test.c_str(), size, size);
+		createPGM(test1.c_str(), size, size);
 		struct stat ifilestatus;
-		stat(test.c_str(), &ifilestatus);
+		stat(test1.c_str(), &ifilestatus);
 		output << ifilestatus.st_size << ", ";
-		reducto::asciiToBinary(test);
-		remove(test.c_str());
+		reducto::asciiToBinary(test1);
+		remove(test1.c_str());
 
-		std::string oFile = "test_b.pgm";
-		struct stat ofilestatus;
-		stat(oFile.c_str(), &ofilestatus);
-		output << ofilestatus.st_size << "\n";
-		remove(oFile.c_str());
+		std::string oFile1 = "test_b.pgm";
+		struct stat ofilestatus1;
+		stat(oFile1.c_str(), &ofilestatus1);
+		output << ofilestatus1.st_size << ", ";
+
+		std::string oFile2 = "test2.pgm";
+		reducto::binaryToAscii(oFile1);
+		struct stat ofilestatus2;
+		stat(oFile2.c_str(), &ofilestatus2);
+		output << ofilestatus2.st_size << "\n";
+
+		remove(oFile1.c_str());
+		remove(oFile2.c_str());
 
 		std::cerr << "Storage: " << size << " of " << maxSize << "\r";
 	}
