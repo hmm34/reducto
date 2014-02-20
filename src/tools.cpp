@@ -64,11 +64,6 @@ namespace reducto
 		outputFile.close();
 	}
 
-  	void compareBinaryToAscii(std::string asciiFile, std::string binaryFile) 
-  	{
-  	}
-
-
 	void binaryToAscii(std::string file)
 	{
 		std::ifstream inputFile(file, std::ifstream::binary | std::ifstream::ate);
