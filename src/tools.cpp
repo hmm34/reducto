@@ -3,14 +3,9 @@
 */
 
 #include "tools.hpp"
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <sstream>
-#include <cstdlib>
-#include <stdlib.h>
-#include <stdio.h>
 
 namespace reducto
 {

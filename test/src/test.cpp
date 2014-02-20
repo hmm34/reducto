@@ -5,12 +5,9 @@
 */
 
 #include <iostream>
-#include <cstdlib>
 #include <fstream>
-#include <time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <errno.h>
 #include "../../src/tools.hpp"
 
 const std::string testUsage = "Expected usage: \n"\
