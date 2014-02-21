@@ -49,6 +49,7 @@ namespace reducto
 				}
 			}
 		}
+		inputFile.close();
 
 		// Write to output file image_b.pgm
 		int lastIndex = file.find_last_of(".");
