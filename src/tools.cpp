@@ -78,9 +78,9 @@ namespace reducto
 
  		 /*
  			First 5 bytes of data consist of header information
- 			Bytes 0-1: Width
- 			Bytes 2-3: Height
- 			Byte 4: Maximum Pixel Value
+ 			* Bytes 0-1: Width
+ 			* Bytes 2-3: Height
+ 			* Byte 4: Maximum Pixel Value
  		*/
  		int width = memblock[0] * 256 + memblock[1];
  		int height = memblock[2] * 256 + memblock[3];
