@@ -75,17 +75,26 @@ namespace reducto
  		std::string oFile = file.substr(0, lastIndex) + "2.pgm";
  		std::ofstream outputFile(oFile);
 
+ 		 /*
+ 			First 5 bytes of data consist of header information
+ 			Bytes 0-1: Width
+ 			Bytes 2-3: Height
+ 			Byte 4: Maximum Pixel Value
+ 		*/
  		int width = memblock[0] * 256 + memblock[1];
  		int height = memblock[2] * 256 + memblock[3];
  		int maxPixel = memblock[4];
 
+ 		// Write out pgm header
  		outputFile << "P2\n";
  		outputFile << "# I will make you teensy!\n";
  		outputFile << width << " " << height << "\n";
  		outputFile << maxPixel << "\n";
 
+ 		// Iterate over pixel values from remaining bytes in binary file
  		for (int index = 0; index < width * height; ++index)
  		{
+ 			// Write out pixel value in standard integer ascii representation
  			outputFile << (int)memblock[5 + index];
  			if (((index + 1) % width == 0) && index > 0)
  			{
