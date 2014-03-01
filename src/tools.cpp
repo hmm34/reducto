@@ -109,4 +109,9 @@ namespace reducto
 	    delete[] memblock;
 	    outputFile.close();
 	}
+
+	void svdCompress(std::string header, std::string svd, int k)
+	{
+		
+	}
 }

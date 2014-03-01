@@ -17,4 +17,11 @@ namespace reducto
 	//! @brief Convert a provided PGM file in binary format to ASCII
 	//! @param file The PGM file in binary format
 	void binaryToAscii(std::string file);
+
+	//! @brief Saves the necessary information in the approximated image in
+	//!	 a recoverable binary format
+	//! @param header The text file containing the image header
+	//! @param svd The text file containing UΣV*
+	//! @param k The approximation norm
+	void svdCompress(std::string header, std::string svd, int k);
 }
