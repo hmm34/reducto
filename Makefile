@@ -11,11 +11,11 @@ all: reducto test
 $(BIN)/test.o: 
 	g++ $(CPPFLAGS) -c $(TEST)/test.cpp -o $(BIN)/test.o
 
-reducto: $(BIN)/reducto.o $(BIN)/tools.o
-	g++ -o $(BIN)/reducto $(BIN)/reducto.o $(BIN)/tools.o
+reducto: $(BIN)/main.o $(BIN)/tools.o
+	g++ -o $(BIN)/reducto $(BIN)/main.o $(BIN)/tools.o
 
-$(BIN)/reducto.o: $(SRC)/reducto.cpp
-	g++ $(CPPFLAGS) -c $(SRC)/reducto.cpp -o $(BIN)/reducto.o
+$(BIN)/main.o: $(SRC)/main.cpp
+	g++ $(CPPFLAGS) -c $(SRC)/main.cpp -o $(BIN)/main.o
 
 $(BIN)/tools.o: $(SRC)/tools.cpp
 	g++ $(CPPFLAGS) -c $(SRC)/tools.cpp -o $(BIN)/tools.o
