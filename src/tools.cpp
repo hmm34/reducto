@@ -50,6 +50,7 @@ namespace reducto
 				}
 			}
 		}
+		inputFile.close();
 
 		// Write to output file image_b.pgm
 		int lastIndex = file.find_last_of(".");
@@ -67,36 +68,36 @@ namespace reducto
 		std::ifstream inputFile(file, std::ifstream::binary | std::ifstream::ate);
 
  		std::streampos size = inputFile.tellg();
- 		char* memblock = new char [size];
+ 		unsigned char* memblock = new unsigned char [size];
  		inputFile.seekg (0, std::ios::beg);
- 		inputFile.read (memblock, size);
+ 		inputFile.read ((char*)memblock, size);
  		inputFile.close();
 
  		int lastIndex = file.find_last_of("_");
  		std::string oFile = file.substr(0, lastIndex) + "2.pgm";
  		std::ofstream outputFile(oFile);
 
- 		unsigned char cwidth1 = memblock[0];
- 		unsigned char cwidth2 = memblock[1];
- 		int width = cwidth1 * 256 + cwidth2;
+ 		 /*
+ 			First 5 bytes of data consist of header information
+ 			* Bytes 0-1: Width
+ 			* Bytes 2-3: Height
+ 			* Byte 4: Maximum Pixel Value
+ 		*/
+ 		int width = memblock[0] * 256 + memblock[1];
+ 		int height = memblock[2] * 256 + memblock[3];
+ 		int maxPixel = memblock[4];
 
- 		unsigned char cheight1 = memblock[2];
- 		unsigned char cheight2 = memblock[3];
- 		int height = cheight1 * 256 + cheight2;
-
- 		unsigned char cmaxPixel = memblock[4];
- 		int maxPixel = cmaxPixel;
-
+ 		// Write out pgm header
  		outputFile << "P2\n";
  		outputFile << "# I will make you teensy!\n";
  		outputFile << width << " " << height << "\n";
  		outputFile << maxPixel << "\n";
 
+ 		// Iterate over pixel values from remaining bytes in binary file
  		for (int index = 0; index < width * height; ++index)
  		{
- 			unsigned char cnum = memblock[5 + index];
- 			int num = cnum;
- 			outputFile << num;
+ 			// Write out pixel value in standard integer ascii representation
+ 			outputFile << (int)memblock[5 + index];
  			if (((index + 1) % width == 0) && index > 0)
  			{
  				outputFile << "\n";
