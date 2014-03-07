@@ -4,7 +4,7 @@
 BIN=bin
 SRC=src
 TEST=test/src
-CPPFLAGS=-Wall -std=c++11 -I /src -I /usr/local/Cellar/eigen/3.2.0/include/eigen3
+CPPFLAGS=-Wall -std=c++11 -I /src
 
 all: reducto test
 

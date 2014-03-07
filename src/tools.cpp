@@ -6,7 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <Eigen/SVD>
+#include "eigen3/Eigen/SVD"
 
 namespace reducto
 {
