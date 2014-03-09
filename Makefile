@@ -4,7 +4,7 @@
 BIN=bin
 SRC=src
 TEST=test/src
-CPPFLAGS=-Wall -std=c++11 -I /src
+CPPFLAGS=-Wall -I /src
 
 all: reducto test
 
