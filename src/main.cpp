@@ -7,6 +7,7 @@
 */
 
 #include <iostream>
+#include <stdlib.h>
 #include "tools.hpp"
 
 std::string usage = "Expected usage: \n"\

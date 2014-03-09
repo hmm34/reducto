@@ -6,14 +6,14 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include "eigen3/Eigen/SVD"
+#include "../eigen3/Eigen/SVD"
 
 namespace reducto
 {
 	void asciiToBinary(std::string file)
 	{
 		std::string line;
-		std::ifstream inputFile(file);
+		std::ifstream inputFile(file.c_str());
 		int value;
 		int lineNum = 0;
 		std::vector<unsigned char> buffer;
@@ -55,7 +55,7 @@ namespace reducto
 		// Write to output file image_b.pgm
 		int lastIndex = file.find_last_of(".");
 		std::string oFile = file.substr(0, lastIndex) + "_b.pgm";
-		std::ofstream outputFile(oFile, std::ofstream::binary);
+		std::ofstream outputFile(oFile.c_str(), std::ofstream::binary);
 		
 		for (int i = 0; i < buffer.size(); ++i)
 			outputFile.write((char*)&buffer[i], sizeof(buffer[i]));
@@ -65,7 +65,7 @@ namespace reducto
 
 	void binaryToAscii(std::string file)
 	{
-		std::ifstream inputFile(file, std::ifstream::binary | std::ifstream::ate);
+		std::ifstream inputFile(file.c_str(), std::ifstream::binary | std::ifstream::ate);
 
  		std::streampos size = inputFile.tellg();
  		unsigned char* memblock = new unsigned char [size];
@@ -75,7 +75,7 @@ namespace reducto
 
  		int lastIndex = file.find_last_of("_");
  		std::string oFile = file.substr(0, lastIndex) + "2.pgm";
- 		std::ofstream outputFile(oFile);
+ 		std::ofstream outputFile(oFile.c_str());
 
  		 /*
  			First 5 bytes of data consist of header information

@@ -6,8 +6,11 @@
 
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <string.h>
+#include <ctime>
 #include "../../src/tools.hpp"
 
 const std::string testUsage = "Expected usage: \n"\
@@ -69,7 +72,7 @@ void createPGM(std::string file, int width, int height)
 {
 	int seed = 0;
 
-	std::ofstream output(file);
+	std::ofstream output(file.c_str());
 	output << "P2\n";
 	output << "# I will make you teensy!\n";
 	output << width << " " << height << "\n";
@@ -95,7 +98,7 @@ void runTimingTests()
 	// Run timing tests and write to a CSV file [with AVERAGES - not all tests..]
 
 	std::string resultFile = "timing-results.csv";
-	std::ofstream output(resultFile);
+	std::ofstream output(resultFile.c_str());
 	output << "width, height, total pixels, ";
 	output << "ascii to binary average time (of 10 runs) in ms, ";
 	output << "binary to ascii average time (of 10 runs) in ms\n";
@@ -148,7 +151,7 @@ void runStorageTests()
 	// Run storage tests and write to a CSV file [with AVERAGES - not all tests..]
 
 	std::string resultFile = "storage-results.csv";
-	std::ofstream output(resultFile);
+	std::ofstream output(resultFile.c_str());
 	output << "total pixels, size of ascii file (bytes), ";
 	output << "size of compressed binary file (bytes), ";
 	output << "size of decompressed ascii file (bytes)\n";
