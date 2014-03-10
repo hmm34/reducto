@@ -113,6 +113,52 @@ namespace reducto
 
 	void svdCompress(std::string header, std::string svd, int k)
 	{
-		
+		std::ifstream fheader(header);
+		int width, height, grayscale;
+		fheader >> width >> height >> grayscale;
+		fheader.close();
+
+		std::ifstream fsvd(svd);
+
+		// Given an m by n matrix A, U is m by m
+		int U[width][width];
+		for (int i = 0; i < width; ++i)
+		{
+			std::string line;
+			std::getline(fsvd, line);
+			std::stringstream ss(line);
+			for (int j = 0; j < width; ++j)
+			{
+				ss >> U[i][j];
+			}
+		}
+
+		// Given an m by n matrix A, Σ (S) is m by n
+		int S[height][width];
+		for (int i = 0; i < height; ++i)
+		{
+			std::string line;
+			std::getline(fsvd, line);
+			std::stringstream ss(line);
+			for (int j = 0; j < width; ++j)
+			{
+				ss >> S[i][j];
+			}
+		}
+
+		// Given an m by n matrix A, V is n by n
+		int V[height][height];
+		for (int i = 0; i < height; ++i)
+		{
+			std::string line;
+			std::getline(fsvd, line);
+			std::stringstream ss(line);
+			for (int j = 0; j < height; ++j)
+			{
+				ss >> V[i][j];
+			}
+		}
+
+		fsvd.close();
 	}
 }

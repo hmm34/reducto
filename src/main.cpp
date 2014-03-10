@@ -65,11 +65,10 @@ int main(int argc, const char* argv[])
 	{
 		if (!areValidArguments(argc, 5))
 			return 4;
-
 		// file is the header.txt
 		std::string svd = argv[3];	// svd.txt
 		int k = atoi(argv[4]);		// k
-		// Do things!
+		reducto::svdCompress(file, svd, k);
 	}
 	else if (option == DECOMPRESS_PGM)
 	{
