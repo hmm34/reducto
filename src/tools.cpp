@@ -205,5 +205,23 @@ namespace reducto
 		}
 
 		fsvd.close();
+
+		// We'll want to take the resulting compressed image and name it
+		// image_b.pgm.SVD - which could take some finessing of the original
+		// ascii to binary te preserve method length.
+		std::string temp = "image_b.pgm.svd";
+		std::ofstream output(temp, std::ofstream::binary);
+
+		// Take width, height, and grayscale value of image. Then add needed
+		// values for U based on rank, the singular values of Σ based on rank
+		// (only the diagonal), and the needed values for transpose of V based
+		// on rank. When read in, we'll fill the remaining values with zeroes
+		// that weren't stored - but the width and height are needed to know
+		// where we should fill on the gaps.
+		std::vector<unsigned char> buffer;
+		for (int i = 0; i < buffer.size(); ++i)
+			outputFile.write((char*)&buffer[i], sizeof(buffer[i]));
+
+		output.close();
 	}
 }
