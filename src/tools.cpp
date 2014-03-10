@@ -134,7 +134,8 @@ namespace reducto
 		}
 
 		// Given an m by n matrix A, Σ (S) is m by n
-		int S[height][width];
+		std::vector<int> S;
+		int rank = 1;
 		for (int i = 0; i < height; ++i)
 		{
 			std::string line;
@@ -142,8 +143,17 @@ namespace reducto
 			std::stringstream ss(line);
 			for (int j = 0; j < width; ++j)
 			{
-				ss >> S[i][j];
+				int temp;
+				ss >> temp;	// throw away
+
+				// keep the singlar values along the diagonal, but only up to
+				// the given rank approkimation
+				if (i == j && rank <= k)
+				{
+					S.push_back(temp); 
+				}
 			}
+			++rank;
 		}
 
 		// Given an m by n matrix A, V is n by n
