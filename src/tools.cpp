@@ -118,6 +118,22 @@ namespace reducto
 		fheader >> width >> height >> grayscale;
 		fheader.close();
 
+		int diff = 0;
+		if (width > height)
+		{
+			diff = width - height;
+			// diff is how many columns are removed from the right of Σ,
+			// and how many rows can be removed from the bottom of V^T, 
+			// which is the equivalent to the number of columns that can be
+			// removed from V
+		}
+		else if (height > width)
+		{
+			diff = height - width;
+			// diff is how many columns can be removed from the right of U,
+			// and how many rows can be removed from the bottom of Σ
+		}
+
 		std::ifstream fsvd(svd);
 
 		// Given an m by n matrix A, U is m by m
