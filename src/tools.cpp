@@ -113,10 +113,21 @@ namespace reducto
 
 	void svdCompress(std::string header, std::string svd, int k)
 	{
+		std::vector<unsigned char> buffer;
+
 		std::ifstream fheader(header);
 		int width, height, grayscale;
 		fheader >> width >> height >> grayscale;
 		fheader.close();
+
+		// This can probably be condensed into a method. Add width, height, and
+		// max gray scale value to the buffer
+		buffer.push_back(width / 256);
+		buffer.push_back(width % 256);
+		buffer.push_back(height / 256);
+		buffer.push_back(height % 256);
+		buffer.push_back(grayscale % 256);
+		buffer.push_back(grayscale % 256);
 
 		int diff = 0;
 		bool wide = false, tall = false;
@@ -141,7 +152,6 @@ namespace reducto
 		std::ifstream fsvd(svd);
 
 		// Given an m by n matrix A, U is m by m
-		int U[width][width];
 		for (int i = 0; i < width; ++i)
 		{
 			rank = 1;
@@ -154,15 +164,17 @@ namespace reducto
 				ss >> temp; // throw away
 
 				// keep those values up to the rank ond disregard unneeded
-				// dimensions. the right side of U can be removed
+				// dimensions. the right side of U can be removed.
+				//
+				// note: how can we gaurantee that temp < 256 ? or that it's
+				// even an integer?
 				if (((wide && i < width - diff) || !wide) && rank <= k)
-					U[i][j] = temp;
+					buffer.push_back(temp);
 				++rank;
 			}
 		}
 
 		// Given an m by n matrix A, Σ (S) is m by n
-		std::vector<int> S;
 		rank = 1;
 		for (int i = 0; i < height; ++i)
 		{
@@ -177,14 +189,16 @@ namespace reducto
 				// keep the singlar values along the diagonal, but only up to
 				// the given rank approximation. the bottom of sigma can be
 				// removed
+				//
+				// note: how can we gaurantee that temp < 256 ? or that it's
+				// even an integer?
 				if (i == j && rank <= k)
-					S.push_back(temp); 
+					buffer.push_back(temp); 
 			}
 			++rank;
 		}
 
 		// Given an m by n matrix A, V is n by n
-		int V[height][height];
 		rank = 1;
 		for (int i = 0; i < height; ++i)
 		{
@@ -198,8 +212,11 @@ namespace reducto
 
 				// keep those values up to the rank and disregard unneeded
 				// dimensions. the bottom of V^T can be removed
+				//
+				// note: how can we gaurantee that temp < 256 ? or that it's
+				// even an integer?
 				if (((tall & j < height - diff) || !tall) && rank <= k)
-					V[i][j] = temp;
+					buffer.push_back(temp);
 			}
 			++rank;
 		}
@@ -218,7 +235,6 @@ namespace reducto
 		// on rank. When read in, we'll fill the remaining values with zeroes
 		// that weren't stored - but the width and height are needed to know
 		// where we should fill on the gaps.
-		std::vector<unsigned char> buffer;
 		for (int i = 0; i < buffer.size(); ++i)
 			outputFile.write((char*)&buffer[i], sizeof(buffer[i]));
 
