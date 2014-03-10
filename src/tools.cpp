@@ -175,9 +175,9 @@ namespace reducto
 		}
 
 		// Given an m by n matrix A, Σ (S) is m by n
-		rank = 1;
 		for (int i = 0; i < height; ++i)
 		{
+			rank = 1;
 			std::string line;
 			std::getline(fsvd, line);
 			std::stringstream ss(line);
@@ -193,9 +193,9 @@ namespace reducto
 				// note: how can we gaurantee that temp < 256 ? or that it's
 				// even an integer?
 				if (i == j && rank <= k)
-					buffer.push_back(temp); 
+					buffer.push_back(temp);
+				++rank;
 			}
-			++rank;
 		}
 
 		// Given an m by n matrix A, V is n by n
