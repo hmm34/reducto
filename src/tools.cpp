@@ -119,6 +119,8 @@ namespace reducto
 		fheader.close();
 
 		int diff = 0;
+		bool wide = false, tall = false;
+		int rank = 1;
 		if (width > height)
 		{
 			diff = width - height;
@@ -126,12 +128,14 @@ namespace reducto
 			// and how many rows can be removed from the bottom of V^T, 
 			// which is the equivalent to the number of columns that can be
 			// removed from V
+			wide = true;
 		}
 		else if (height > width)
 		{
 			diff = height - width;
 			// diff is how many columns can be removed from the right of U,
 			// and how many rows can be removed from the bottom of Σ
+			tall = true;
 		}
 
 		std::ifstream fsvd(svd);
@@ -140,18 +144,26 @@ namespace reducto
 		int U[width][width];
 		for (int i = 0; i < width; ++i)
 		{
+			rank = 1;
 			std::string line;
 			std::getline(fsvd, line);
 			std::stringstream ss(line);
 			for (int j = 0; j < width; ++j)
 			{
-				ss >> U[i][j];
+				int temp;
+				ss >> temp; // throw away
+
+				// keep those values up to the rank ond disregard unneeded
+				// dimensions. the right side of U can be removed
+				if (((wide && i < width - diff) || !wide) && rank <= k)
+					U[i][j] = temp;
+				++rank;
 			}
 		}
 
 		// Given an m by n matrix A, Σ (S) is m by n
 		std::vector<int> S;
-		int rank = 1;
+		rank = 1;
 		for (int i = 0; i < height; ++i)
 		{
 			std::string line;
@@ -163,17 +175,17 @@ namespace reducto
 				ss >> temp;	// throw away
 
 				// keep the singlar values along the diagonal, but only up to
-				// the given rank approkimation
+				// the given rank approximation. the bottom of sigma can be
+				// removed
 				if (i == j && rank <= k)
-				{
 					S.push_back(temp); 
-				}
 			}
 			++rank;
 		}
 
 		// Given an m by n matrix A, V is n by n
 		int V[height][height];
+		rank = 1;
 		for (int i = 0; i < height; ++i)
 		{
 			std::string line;
@@ -181,8 +193,15 @@ namespace reducto
 			std::stringstream ss(line);
 			for (int j = 0; j < height; ++j)
 			{
-				ss >> V[i][j];
+				int temp;
+				ss >> temp; // thow away
+
+				// keep those values up to the rank and disregard unneeded
+				// dimensions. the bottom of V^T can be removed
+				if (((tall & j < height - diff) || !tall) && rank <= k)
+					V[i][j] = temp;
 			}
+			++rank;
 		}
 
 		fsvd.close();
