@@ -215,7 +215,7 @@ namespace reducto
 				//
 				// note: how can we gaurantee that temp < 256 ? or that it's
 				// even an integer?
-				if (((tall & j < height - diff) || !tall) && rank <= k)
+				if (((tall && j < height - diff) || !tall) && rank <= k)
 					buffer.push_back(temp);
 			}
 			++rank;
@@ -236,7 +236,7 @@ namespace reducto
 		// that weren't stored - but the width and height are needed to know
 		// where we should fill on the gaps.
 		for (int i = 0; i < buffer.size(); ++i)
-			outputFile.write((char*)&buffer[i], sizeof(buffer[i]));
+			output.write((char*)&buffer[i], sizeof(buffer[i]));
 
 		output.close();
 	}
