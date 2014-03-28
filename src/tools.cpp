@@ -11,6 +11,7 @@
 
 namespace reducto
 {
+	// --------------------------------------------------------------------- //
 	void asciiToBinary(std::string file)
 	{
 		std::string line;
@@ -64,6 +65,7 @@ namespace reducto
 		outputFile.close();
 	}
 
+	// --------------------------------------------------------------------- //
 	void binaryToAscii(std::string file)
 	{
 		std::ifstream inputFile(file.c_str(), std::ifstream::binary | std::ifstream::ate);
@@ -100,18 +102,15 @@ namespace reducto
  			// Write out pixel value in standard integer ascii representation
  			outputFile << (int)memblock[5 + index];
  			if (((index + 1) % width == 0) && index > 0)
- 			{
  				outputFile << "\n";
- 			}
  			else
- 			{
  				outputFile << " ";
- 			}
  		}
 	    delete[] memblock;
 	    outputFile.close();
 	}
 
+	// --------------------------------------------------------------------- //
 	void asciiToSvd(std::string file)
 	{
 		int lastIndex = file.find_last_of(".pgm");
@@ -130,7 +129,8 @@ namespace reducto
 		Eigen::MatrixXf a(width, height);
 		for (int yPos = 0; yPos < height; ++yPos)
 		{
-			for (int xPos = 0; xPos < width; ++xPos) {
+			for (int xPos = 0; xPos < width; ++xPos) 
+			{
 				ss >> value;
 				a(xPos, yPos) = value;
 			}
@@ -161,9 +161,11 @@ namespace reducto
 		}
 
 		std::ofstream svdFile(svd.c_str());
+		svdFile << u << "\n" << s << "\n" << v "\n";
 		svdFile.close();
 	}
 
+	// --------------------------------------------------------------------- //
 	void svdCompress(std::string header, std::string svd, int k)
 	{
 		std::vector<unsigned char> buffer;
@@ -276,6 +278,7 @@ namespace reducto
 		output.close();
 	}
 
+	// --------------------------------------------------------------------- //
 	void svdDecompress(std::string file)
 	{
 		// Open binary file. Read gray scale value, width, height of image

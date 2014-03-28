@@ -14,7 +14,8 @@ std::string usage = "Expected usage: \n"\
                     "\treducto 1 <image.pgm> \n"\
                     "\treducto 2 <image_b.pgm> \n"\
                     "\treducto 3 <header.txt> <SVD.txt> k \n"\
-                    "\treducto 4 <image_b.pgm.SVD> \n";
+                    "\treducto 4 <image_b.pgm.SVD> \n"\
+                    "\treducto 5 <image.pgm> \n";
 
 const std::string ASCII_TO_BINARY = "1";
 const std::string BINARY_TO_ASCII = "2";
