@@ -131,8 +131,8 @@ namespace reducto
 
 		// Must store the rank so we know where to fill in values for
 		// recreating the original matrix
-		buffer.push_back(rank / 256);
-		buffer.push_back(rank % 256);
+		buffer.push_back(k / 256);
+		buffer.push_back(k % 256);
 
 		int rank = 0;
 		std::ifstream fsvd(svd.c_str());
