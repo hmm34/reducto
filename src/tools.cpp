@@ -129,26 +129,7 @@ namespace reducto
 		buffer.push_back(grayscale % 256);
 		buffer.push_back(grayscale % 256);
 
-		int diff = 0;
-		bool wide = false, tall = false;
-		int rank = 1;
-		if (width > height)
-		{
-			diff = width - height;
-			// diff is how many columns are removed from the right of Σ,
-			// and how many rows can be removed from the bottom of V^T, 
-			// which is the equivalent to the number of columns that can be
-			// removed from V
-			wide = true;
-		}
-		else if (height > width)
-		{
-			diff = height - width;
-			// diff is how many columns can be removed from the right of U,
-			// and how many rows can be removed from the bottom of Σ
-			tall = true;
-		}
-
+		int rank = 0;
 		std::ifstream fsvd(svd.c_str());
 
 		// Given an m by n matrix A, U is m by m
@@ -168,16 +149,17 @@ namespace reducto
 				//
 				// note: how can we gaurantee that temp < 256 ? or that it's
 				// even an integer?
-				if (((wide && i < width - diff) || !wide) && rank <= k)
+				if (rank <= k) {
 					buffer.push_back(temp);
-				++rank;
+					++rank;
+				}
 			}
 		}
 
 		// Given an m by n matrix A, Σ (S) is m by n
+		rank = 1;
 		for (int i = 0; i < height; ++i)
 		{
-			rank = 1;
 			std::string line;
 			std::getline(fsvd, line);
 			std::stringstream ss(line);
@@ -192,16 +174,17 @@ namespace reducto
 				//
 				// note: how can we gaurantee that temp < 256 ? or that it's
 				// even an integer?
-				if (i == j && rank <= k)
+				if (i == j && rank <= k) {
 					buffer.push_back(temp);
-				++rank;
+					++rank;
+				}
 			}
 		}
 
 		// Given an m by n matrix A, V is n by n
-		rank = 1;
 		for (int i = 0; i < height; ++i)
 		{
+			rank = 1;
 			std::string line;
 			std::getline(fsvd, line);
 			std::stringstream ss(line);
@@ -215,10 +198,11 @@ namespace reducto
 				//
 				// note: how can we gaurantee that temp < 256 ? or that it's
 				// even an integer?
-				if (((tall && j < height - diff) || !tall) && rank <= k)
+				if (rank <= k) {
 					buffer.push_back(temp);
+					++rank;
+				}
 			}
-			++rank;
 		}
 
 		fsvd.close();
