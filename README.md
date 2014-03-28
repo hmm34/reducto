@@ -66,6 +66,16 @@ image, named image_k.pgm, that can be viewed using any pgm viewer. See
 [issue #9](https://github.com/hmm34/reducto/issues/9).
 
 
+##### `reducto 5 image.pgm`
+
+Possible extra credit opportunity. Takes a PGM image in ASCII format and
+produces the header.txt and svd.txt files that can be used for step 3. Employs
+SVD decomposition on the original matrix A (which is the image) to produce
+three matrices U, S, and V, which are written to image_svd.txt. The width,
+height, and maximum grayscale values from the original image are pereserved
+and written to image_header.txt.
+
+
 ### Part II: Dimensionality Reduction
 
 The most important algorithm used in this section is 

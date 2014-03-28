@@ -161,7 +161,7 @@ namespace reducto
 		}
 
 		std::ofstream svdFile(svd.c_str());
-		svdFile << u << "\n" << s << "\n" << v "\n";
+		svdFile << u << "\n" << s << "\n" << v << "\n";
 		svdFile.close();
 	}
 
@@ -188,6 +188,16 @@ namespace reducto
 		buffer.push_back(k / 256);
 		buffer.push_back(k % 256);
 
+		// We'll want to take the resulting compressed image and name it
+		// image_b.pgm.SVD - which could take some finessing of the original
+		// ascii to binary te preserve method length.
+		std::string temp = "image_b.pgm.svd";
+		std::ofstream output(temp.c_str(), std::ofstream::binary);
+
+		// Write to values
+		for (unsigned int i = 0; i < buffer.size(); ++i)
+			output.write((char*)&buffer[i], sizeof(buffer[i]));
+
 		int rank = 0;
 		std::ifstream fsvd(svd.c_str());
 
@@ -207,7 +217,7 @@ namespace reducto
 				// dimensions. the right side of U can be removed.
 				if (rank <= k) 
 				{
-					buffer.push_back(temp);
+					output.write(reinterpret_cast<char*>(&temp), sizeof temp);
 					++rank;
 				}
 			}
@@ -230,7 +240,7 @@ namespace reducto
 				// removed
 				if (i == j && rank <= k) 
 				{
-					buffer.push_back(temp);
+					output.write(reinterpret_cast<char*>(&temp), sizeof temp);
 					++rank;
 				}
 			}
@@ -252,29 +262,13 @@ namespace reducto
 				// dimensions. the right of V can be removed (bottom of V^T)
 				if (rank <= k) 
 				{
-					buffer.push_back(temp);
+					output.write(reinterpret_cast<char*>(&temp), sizeof temp);
 					++rank;
 				}
 			}
 		}
 
 		fsvd.close();
-
-		// We'll want to take the resulting compressed image and name it
-		// image_b.pgm.SVD - which could take some finessing of the original
-		// ascii to binary te preserve method length.
-		std::string temp = "image_b.pgm.svd";
-		std::ofstream output(temp.c_str(), std::ofstream::binary);
-
-		// Take width, height, and grayscale value of image. Then add needed
-		// values for U based on rank, the singular values of Σ based on rank
-		// (only the diagonal), and the needed values for transpose of V based
-		// on rank. When read in, we'll fill the remaining values with zeroes
-		// that weren't stored - but the width and height are needed to know
-		// where we should fill on the gaps.
-		for (unsigned int i = 0; i < buffer.size(); ++i)
-			output.write((char*)&buffer[i], sizeof(buffer[i]));
-
 		output.close();
 	}
 
@@ -284,10 +278,10 @@ namespace reducto
 		// Open binary file. Read gray scale value, width, height of image
 		std::ifstream inputFile(file.c_str(), std::ifstream::binary | std::ifstream::ate);
 
-		std::streampos size = inputFile.tellg();
- 		unsigned char* memblock = new unsigned char [size];
+		const int bytesInHeader = 7;
+ 		unsigned char* memblock = new unsigned char [bytesInHeader];
  		inputFile.seekg (0, std::ios::beg);
- 		inputFile.read ((char*)memblock, size);
+ 		inputFile.read ((char*)memblock, bytesInHeader);
  		inputFile.close();
 
 		// Read SVD values and write to full matrices based on height and
@@ -304,7 +298,6 @@ namespace reducto
  		int height = memblock[2] * 256 + memblock[3];	// n
  		int maxPixel = memblock[4];
  		int rank = memblock[5] * 256 + memblock[6];
- 		int index = 7;
 
  		// Matrix U: m by m (height by height)
  		Eigen::MatrixXf u(height, height);
@@ -315,7 +308,7 @@ namespace reducto
  			{
  				float val = 0;
  				if (k <= rank) 
- 					val = memblock[index++];
+ 					inputFile.read(reinterpret_cast<char*>( &val ), sizeof val);
  				u(i, j) = val;
  			}
  			++k;
@@ -331,7 +324,7 @@ namespace reducto
  				float val = 0;
  				if (k <= rank && i == j) 
  				{
- 					val = memblock[index++];
+ 					inputFile.read(reinterpret_cast<char*>( &val ), sizeof val);
  					++k;
  				}
  				s(i, j) = val;
@@ -347,7 +340,7 @@ namespace reducto
  			{
  				float val = 0;
  				if (k <= rank)
- 					val = memblock[index++];
+ 					inputFile.read(reinterpret_cast<char*>( &val ), sizeof val);
  				v(i, j) = val;
  			}
  			++k;
