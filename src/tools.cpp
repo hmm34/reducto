@@ -141,7 +141,7 @@ namespace reducto
 			std::stringstream ss(line);
 			for (int j = 0; j < width; ++j)
 			{
-				int temp;
+				float temp;
 				ss >> temp; // throw away
 
 				// keep those values up to the rank ond disregard unneeded
@@ -165,7 +165,7 @@ namespace reducto
 			std::stringstream ss(line);
 			for (int j = 0; j < width; ++j)
 			{
-				int temp;
+				float temp;
 				ss >> temp;	// throw away
 
 				// keep the singlar values along the diagonal, but only up to
@@ -190,7 +190,7 @@ namespace reducto
 			std::stringstream ss(line);
 			for (int j = 0; j < height; ++j)
 			{
-				int temp;
+				float temp;
 				ss >> temp; // thow away
 
 				// keep those values up to the rank and disregard unneeded
