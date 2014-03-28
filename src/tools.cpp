@@ -7,6 +7,7 @@
 #include <sstream>
 #include <vector>
 #include "../eigen3/Eigen/SVD"
+#include "../eigen3/Eigen/Eigen"
 
 namespace reducto
 {
@@ -77,7 +78,7 @@ namespace reducto
  		std::string oFile = file.substr(0, lastIndex) + "2.pgm";
  		std::ofstream outputFile(oFile.c_str());
 
- 		 /*
+ 		/*
  			First 5 bytes of data consist of header information
  			* Bytes 0-1: Width
  			* Bytes 2-3: Height
@@ -126,8 +127,7 @@ namespace reducto
 		buffer.push_back(width % 256);
 		buffer.push_back(height / 256);
 		buffer.push_back(height % 256);
-		buffer.push_back(grayscale / 256);
-		buffer.push_back(grayscale % 256);
+		buffer.push_back(grayscale);
 
 		// Must store the rank so we know where to fill in values for
 		// recreating the original matrix
@@ -151,9 +151,6 @@ namespace reducto
 
 				// keep those values up to the rank ond disregard unneeded
 				// dimensions. the right side of U can be removed.
-				//
-				// note: how can we gaurantee that temp < 256 ? or that it's
-				// even an integer?
 				if (rank <= k) 
 				{
 					buffer.push_back(temp);
@@ -177,9 +174,6 @@ namespace reducto
 				// keep the singlar values along the diagonal, but only up to
 				// the given rank approximation. the bottom of sigma can be
 				// removed
-				//
-				// note: how can we gaurantee that temp < 256 ? or that it's
-				// even an integer?
 				if (i == j && rank <= k) 
 				{
 					buffer.push_back(temp);
@@ -201,10 +195,7 @@ namespace reducto
 				ss >> temp; // thow away
 
 				// keep those values up to the rank and disregard unneeded
-				// dimensions. the bottom of V^T can be removed
-				//
-				// note: how can we gaurantee that temp < 256 ? or that it's
-				// even an integer?
+				// dimensions. the right of V can be removed (bottom of V^T)
 				if (rank <= k) 
 				{
 					buffer.push_back(temp);
@@ -244,8 +235,72 @@ namespace reducto
  		inputFile.read ((char*)memblock, size);
  		inputFile.close();
 
+ 		//! @todo I think k needs renamed to be what the k value was used
+ 		//! to produce this image.
+ 		std::ofstream outputFile("image_k.pgm");
+
 		// Read SVD values and write to full matrices based on height and
 		// width dimensions for multiplication.
+
+		/*
+ 			First 5 bytes of data consist of header information
+ 			* Bytes 0-1: Width
+ 			* Bytes 2-3: Height
+ 			* Byte 4: Maximum Pixel Value
+ 			* Bytes 5-6: Rank approximation
+ 		*/
+ 		int width = memblock[0] * 256 + memblock[1];	// m
+ 		int height = memblock[2] * 256 + memblock[3];	// n
+ 		int maxPixel = memblock[4];
+ 		int rank = memblock[5] * 256 + memblock[6];
+ 		int index = 7;
+
+ 		// Matrix U: m by m (height by height)
+ 		Eigen::MatrixXf u(height, height);
+ 		int k = 1;
+ 		for (int i = 0; i < height; ++i) 
+ 		{ 
+ 			for (int j = 0; j < height; ++j) 
+ 			{
+ 				float val = 0;
+ 				if (k <= rank) 
+ 					val = memblock[index++];
+ 				u(i, j) = val;
+ 			}
+ 			++k;
+ 		}
+
+ 		// Matrix S: m by n (height by width)
+ 		Eigen::MatrixXf s(height, width);
+ 		k = 1;
+ 		for (int i = 0; i < height; ++i) 
+ 		{
+ 			for (int j = 0; j < width; ++j)
+ 			{
+ 				float val = 0;
+ 				if (k <= rank && i == j) 
+ 				{
+ 					val = memblock[index++];
+ 					++k;
+ 				}
+ 				s(i, j) = val;
+ 			}
+ 		}
+
+ 		// Matrix V: n by n (width by width)
+ 		Eigen::MatrixXf v(width, width);
+ 		k = 1;
+ 		for (int i = 0; i < width; ++i)
+ 		{
+ 			for (int j = 0; j < width; ++j)
+ 			{
+ 				float val = 0;
+ 				if (k <= rank)
+ 					val = memblock[index++];
+ 				v(i, j) = val;
+ 			}
+ 			++k;
+ 		}
 
 		// Multiply matrices to get the original image in matrix A
 
