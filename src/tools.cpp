@@ -231,6 +231,13 @@ namespace reducto
 	void svdDecompress(std::string file)
 	{
 		// Open binary file. Read gray scale value, width, height of image
+		std::ifstream inputFile(file.c_str(), std::ifstream::binary | std::ifstream::ate);
+
+		std::streampos size = inputFile.tellg();
+ 		unsigned char* memblock = new unsigned char [size];
+ 		inputFile.seekg (0, std::ios::beg);
+ 		inputFile.read ((char*)memblock, size);
+ 		inputFile.close();
 
 		// Read SVD values and write to full matrices based on height and
 		// width dimensions for multiplication.
