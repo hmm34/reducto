@@ -74,9 +74,8 @@ int main(int argc, const char* argv[])
 	{
 		if (!areValidArguments(argc, 3))
 			return 5;
-
 		// file is the compressed image that needs decompressed
-		// Do things!
+		reducto::svdDecompress(file);
 	}
 	else
 	{

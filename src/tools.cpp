@@ -149,7 +149,8 @@ namespace reducto
 				//
 				// note: how can we gaurantee that temp < 256 ? or that it's
 				// even an integer?
-				if (rank <= k) {
+				if (rank <= k) 
+				{
 					buffer.push_back(temp);
 					++rank;
 				}
@@ -174,7 +175,8 @@ namespace reducto
 				//
 				// note: how can we gaurantee that temp < 256 ? or that it's
 				// even an integer?
-				if (i == j && rank <= k) {
+				if (i == j && rank <= k) 
+				{
 					buffer.push_back(temp);
 					++rank;
 				}
@@ -198,7 +200,8 @@ namespace reducto
 				//
 				// note: how can we gaurantee that temp < 256 ? or that it's
 				// even an integer?
-				if (rank <= k) {
+				if (rank <= k) 
+				{
 					buffer.push_back(temp);
 					++rank;
 				}
@@ -224,4 +227,18 @@ namespace reducto
 
 		output.close();
 	}
+
+	void svdDecompress(std::string file)
+	{
+		// Open binary file. Read gray scale value, width, height of image
+
+		// Read SVD values and write to full matrices based on height and
+		// width dimensions for multiplication.
+
+		// Multiply matrices to get the original image in matrix A
+
+		// Write gray scale value, width, height, matrix A into ASCII PGM file
+	}
+
 }
+

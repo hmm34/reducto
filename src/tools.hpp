@@ -24,4 +24,10 @@ namespace reducto
 	//! @param svd The text file containing UΣV*
 	//! @param k The approximation norm
 	void svdCompress(std::string header, std::string svd, int k);
+
+	//! @brief Decompresses an image saved in binary SVD format and converts
+	//!  it to a PGM ASCII format
+	//! @param file The binary file containing the compressed SVD matrices
+	//!  to decompress
+	void svdDecompress(std::string file);
 }
