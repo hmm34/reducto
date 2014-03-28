@@ -18,6 +18,11 @@ namespace reducto
 	//! @param file The PGM file in binary format
 	void binaryToAscii(std::string file);
 
+	//! @brief Converts a PGM image into SVD format, creating two files for
+	//!  the header and SVD matrices
+	//! @param file The PGM file in ASCII format
+	void asciiToSvd(std::string file);
+
 	//! @brief Saves the necessary information in the approximated image in
 	//!	 a recoverable binary format
 	//! @param header The text file containing the image header

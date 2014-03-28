@@ -20,6 +20,7 @@ const std::string ASCII_TO_BINARY = "1";
 const std::string BINARY_TO_ASCII = "2";
 const std::string COMPRESS_PGM    = "3";
 const std::string DECOMPRESS_PGM  = "4";
+const std::string ASCII_TO_SVD    = "5";
 
 
 //! @brief Verifies that there are the expected number of arguments and, if
@@ -76,6 +77,13 @@ int main(int argc, const char* argv[])
 			return 5;
 		// file is the compressed image that needs decompressed
 		reducto::svdDecompress(file);
+	}
+	else if (option == ASCII_TO_SVD)
+	{
+		if (!areValidArguments(argc, 3))
+			return 7;
+		// file is the ascii image to be converted into svd matrices
+		reducto::asciiToSvd(file);
 	}
 	else
 	{

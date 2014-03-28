@@ -112,6 +112,58 @@ namespace reducto
 	    outputFile.close();
 	}
 
+	void asciiToSvd(std::string file)
+	{
+		int lastIndex = file.find_last_of(".pgm");
+		std::string header = file.substr(0, lastIndex) + "_header.txt";
+		std::string svd = file.substr(0, lastIndex) + "_svd.txt";
+
+		std::ifstream inputFile(file.c_str());
+		float value;
+		std::stringstream ss;
+
+		int height, width, grayscale;
+		ss << inputFile.rdbuf();
+		ss >> width >> height;		// X, Y
+		ss >> grayscale;			// Max
+
+		Eigen::MatrixXf a(width, height);
+		for (int yPos = 0; yPos < height; ++yPos)
+		{
+			for (int xPos = 0; xPos < width; ++xPos) {
+				ss >> value;
+				a(xPos, yPos) = value;
+			}
+		}
+		inputFile.close();
+
+		std::ofstream headerFile(header.c_str());
+		headerFile << width << " " << height << " " << grayscale;
+		headerFile.close();
+
+		Eigen::MatrixXf u, s, v;
+		Eigen::VectorXf singularVals;
+
+		Eigen::JacobiSVD<Eigen::MatrixXf> svdm(a);
+		u = svdm.matrixU();
+		v = svdm.matrixV();
+
+		singularVals = svdm.singularValues();
+		for (int i = 0; i < a.rows(); ++i)
+		{
+			for (int j = 0; j < a.cols(); ++j)
+			{
+				int val = 0;
+				if (i == j)
+					val = singularVals(i);
+				s(i, j) = val;
+			}
+		}
+
+		std::ofstream svdFile(svd.c_str());
+		svdFile.close();
+	}
+
 	void svdCompress(std::string header, std::string svd, int k)
 	{
 		std::vector<unsigned char> buffer;
