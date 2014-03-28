@@ -235,10 +235,6 @@ namespace reducto
  		inputFile.read ((char*)memblock, size);
  		inputFile.close();
 
- 		//! @todo I think k needs renamed to be what the k value was used
- 		//! to produce this image.
- 		std::ofstream outputFile("image_k.pgm");
-
 		// Read SVD values and write to full matrices based on height and
 		// width dimensions for multiplication.
 
@@ -302,9 +298,26 @@ namespace reducto
  			++k;
  		}
 
+ 		delete[] memblock;
+
 		// Multiply matrices to get the original image in matrix A
+		Eigen::MatrixXf vT = v.transpose();
+		Eigen::MatrixXf a = u * s * vT;
 
 		// Write gray scale value, width, height, matrix A into ASCII PGM file
+
+		//! @todo I think k needs renamed to be what the k value was used
+ 		//! to produce this image.
+ 		std::ofstream outputFile("image_k.pgm");
+
+ 		// Header
+ 		outputFile << "P2\n";
+ 		outputFile << "# I will make you teensy!\n";
+ 		outputFile << width << " " << height << "\n";
+ 		outputFile << maxPixel << "\n";
+ 		
+ 		// Approximate original image
+ 		outputFile << a << "\n";
 	}
 
 }
