@@ -243,13 +243,13 @@ namespace reducto
 		}
 
 		// Given an m by n matrix A, U is m by m
-		for (int i = 0; i < width; ++i)
+		for (int i = 0; i < height; ++i)
 		{
 			rank = 1;
 			std::string line;
 			std::getline(fsvd, line);
 			std::stringstream ss(line);
-			for (int j = 0; j < width; ++j)
+			for (int j = 0; j < height; ++j)
 			{
 				float temp;
 				ss >> temp; // throw away
@@ -258,6 +258,7 @@ namespace reducto
 				// dimensions. the right side of U can be removed.
 				if (rank <= k) 
 				{
+					std::cerr << "COMPRESS U: " << temp << "\n";
 					output.write(reinterpret_cast<char*>(&temp), sizeof temp);
 					++rank;
 				}
@@ -281,6 +282,7 @@ namespace reducto
 				// removed
 				if (i == j && rank <= k) 
 				{
+					std::cerr << "COMPRESS SIGMA: " << temp << "\n";
 					output.write(reinterpret_cast<char*>(&temp), sizeof temp);
 					++rank;
 				}
@@ -288,13 +290,13 @@ namespace reducto
 		}
 
 		// Given an m by n matrix A, V is n by n
-		for (int i = 0; i < height; ++i)
+		for (int i = 0; i < width; ++i)
 		{
 			rank = 1;
 			std::string line;
 			std::getline(fsvd, line);
 			std::stringstream ss(line);
-			for (int j = 0; j < height; ++j)
+			for (int j = 0; j < width; ++j)
 			{
 				float temp;
 				ss >> temp; // thow away
@@ -303,6 +305,7 @@ namespace reducto
 				// dimensions. the right of V can be removed (bottom of V^T)
 				if (rank <= k) 
 				{
+					std::cerr << "COMPRESS V: " << temp << "\n";
 					output.write(reinterpret_cast<char*>(&temp), sizeof temp);
 					++rank;
 				}
