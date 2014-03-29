@@ -9,6 +9,9 @@
 #include "../eigen3/Eigen/SVD"
 #include "../eigen3/Eigen/Eigen"
 
+// Debugging
+#include <iostream>
+
 namespace reducto
 {
 	// --------------------------------------------------------------------- //
@@ -16,6 +19,13 @@ namespace reducto
 	{
 		std::string line;
 		std::ifstream inputFile(file.c_str());
+
+		if (!inputFile)
+		{
+			std::cerr << "Could not open file " << file << "\n";
+			return;
+		}
+
 		int value;
 		int lineNum = 0;
 		std::vector<unsigned char> buffer;
@@ -70,6 +80,12 @@ namespace reducto
 	{
 		std::ifstream inputFile(file.c_str(), std::ifstream::binary | std::ifstream::ate);
 
+		if (!inputFile)
+		{
+			std::cerr << "Could not open file " << file << "\n";
+			return;
+		}
+
  		std::streampos size = inputFile.tellg();
  		unsigned char* memblock = new unsigned char [size];
  		inputFile.seekg (0, std::ios::beg);
@@ -114,10 +130,20 @@ namespace reducto
 	void asciiToSvd(std::string file)
 	{
 		int lastIndex = file.find_last_of(".pgm");
-		std::string header = file.substr(0, lastIndex) + "_header.txt";
-		std::string svd = file.substr(0, lastIndex) + "_svd.txt";
+		std::string header = file.substr(0, lastIndex - 3) + "_header.txt";
+		std::string svd = file.substr(0, lastIndex - 3) + "_svd.txt";
 
 		std::ifstream inputFile(file.c_str());
+		if (!inputFile)
+		{
+			std::cerr << "Could not open file " << file << "\n";
+			return;
+		}
+
+		std::string line;
+		getline(inputFile, line);	// "P2"
+		getline(inputFile, line);	// "#Created by Irfan View"
+
 		float value;
 		std::stringstream ss;
 
@@ -126,13 +152,13 @@ namespace reducto
 		ss >> width >> height;		// X, Y
 		ss >> grayscale;			// Max
 
-		Eigen::MatrixXf a(width, height);
+		Eigen::MatrixXf a(height, width);
 		for (int yPos = 0; yPos < height; ++yPos)
 		{
 			for (int xPos = 0; xPos < width; ++xPos) 
 			{
 				ss >> value;
-				a(xPos, yPos) = value;
+				a(yPos, xPos) = value;
 			}
 		}
 		inputFile.close();
@@ -141,10 +167,12 @@ namespace reducto
 		headerFile << width << " " << height << " " << grayscale;
 		headerFile.close();
 
-		Eigen::MatrixXf u, s, v;
+		Eigen::MatrixXf u(width, width), s(height, width), v(height, height);
 		Eigen::VectorXf singularVals;
 
-		Eigen::JacobiSVD<Eigen::MatrixXf> svdm(a);
+		std::cout << a << "\n";
+		Eigen::JacobiSVD<Eigen::MatrixXf> svdm(a, Eigen::ComputeThinU | Eigen::ComputeThinV);
+
 		u = svdm.matrixU();
 		v = svdm.matrixV();
 
@@ -171,6 +199,13 @@ namespace reducto
 		std::vector<unsigned char> buffer;
 
 		std::ifstream fheader(header.c_str());
+
+		if (!fheader)
+		{
+			std::cerr << "Could not open file " << header << "\n";
+			return;
+		}
+
 		int width, height, grayscale;
 		fheader >> width >> height >> grayscale;
 		fheader.close();
@@ -200,6 +235,12 @@ namespace reducto
 
 		int rank = 0;
 		std::ifstream fsvd(svd.c_str());
+
+		if (!fsvd)
+		{
+			std::cerr << "Could not open file " << svd << "\n";
+			return;
+		}
 
 		// Given an m by n matrix A, U is m by m
 		for (int i = 0; i < width; ++i)
@@ -278,11 +319,16 @@ namespace reducto
 		// Open binary file. Read gray scale value, width, height of image
 		std::ifstream inputFile(file.c_str(), std::ifstream::binary | std::ifstream::ate);
 
+		if (!inputFile)
+		{
+			std::cerr << "Could not find file " << file << "\n";
+			return;
+		}
+
 		const int bytesInHeader = 7;
  		unsigned char* memblock = new unsigned char [bytesInHeader];
  		inputFile.seekg (0, std::ios::beg);
  		inputFile.read ((char*)memblock, bytesInHeader);
- 		inputFile.close();
 
 		// Read SVD values and write to full matrices based on height and
 		// width dimensions for multiplication.
@@ -298,20 +344,29 @@ namespace reducto
  		int height = memblock[2] * 256 + memblock[3];	// n
  		int maxPixel = memblock[4];
  		int rank = memblock[5] * 256 + memblock[6];
+ 		std::cout << "rank is: " << rank << "\n";
+
+ 		int index = bytesInHeader;
 
  		// Matrix U: m by m (height by height)
  		Eigen::MatrixXf u(height, height);
  		int k = 1;
  		for (int i = 0; i < height; ++i) 
  		{ 
+ 			k = 1;
  			for (int j = 0; j < height; ++j) 
  			{
  				float val = 0;
- 				if (k <= rank) 
+ 				if (k <= rank) {
  					inputFile.read(reinterpret_cast<char*>( &val ), sizeof val);
+ 					std::cout << "Read to value... " << val << "\n";
+ 					++k;
+ 				}
+ 				else {
+ 					std::cout << "NO READ.... " << val << "\n";
+ 				}
  				u(i, j) = val;
  			}
- 			++k;
  		}
 
  		// Matrix S: m by n (height by width)
@@ -325,7 +380,11 @@ namespace reducto
  				if (k <= rank && i == j) 
  				{
  					inputFile.read(reinterpret_cast<char*>( &val ), sizeof val);
+ 					std::cout << "Read to value... " << val << "\n";
  					++k;
+ 				}
+ 				else {
+ 					std::cout << "NO READ.... " << val << "\n";
  				}
  				s(i, j) = val;
  			}
@@ -339,8 +398,13 @@ namespace reducto
  			for (int j = 0; j < width; ++j)
  			{
  				float val = 0;
- 				if (k <= rank)
+ 				if (k <= rank) {
  					inputFile.read(reinterpret_cast<char*>( &val ), sizeof val);
+ 					std::cout << "Read to value... " << val << "\n";
+		 		}
+		 		else {
+ 					std::cout << "NO READ.... " << val << "\n";
+ 				}
  				v(i, j) = val;
  			}
  			++k;
@@ -350,7 +414,12 @@ namespace reducto
 
 		// Multiply matrices to get the original image in matrix A
 		Eigen::MatrixXf vT = v.transpose();
-		Eigen::MatrixXf a = u * s * vT;
+		Eigen::MatrixXf a = (u * s * vT);
+
+		std::cout << "u\n" << u << "\n";
+		std::cout << "s\n" << s << "\n";
+		std::cout << "vt\n" << vT << "\n";
+		std::cout << "a\n" << a << "\n";
 
 		// Write gray scale value, width, height, matrix A into ASCII PGM file
 
