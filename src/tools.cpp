@@ -340,11 +340,10 @@ namespace reducto
  			* Byte 4: Maximum Pixel Value
  			* Bytes 5-6: Rank approximation
  		*/
- 		int width = memblock[0] * 256 + memblock[1];	// m
- 		int height = memblock[2] * 256 + memblock[3];	// n
+ 		int width = memblock[0] * 256 + memblock[1];	// n
+ 		int height = memblock[2] * 256 + memblock[3];	// m
  		int maxPixel = memblock[4];
  		int rank = memblock[5] * 256 + memblock[6];
- 		std::cout << "rank is: " << rank << "\n";
 
  		// Matrix U: m by m (height by height)
  		Eigen::MatrixXf u(height, height);
@@ -402,11 +401,6 @@ namespace reducto
 		Eigen::MatrixXf vT = v.transpose();
 		Eigen::MatrixXf a = u * s * vT;
 
-		std::cout << "u\n" << u << "\n";
-		std::cout << "s\n" << s << "\n";
-		std::cout << "vt\n" << vT << "\n";
-		std::cout << "a\n" << a << "\n";
-
 		// Write gray scale value, width, height, matrix A into ASCII PGM file
 
 		//! @todo I think k needs renamed to be what the k value was used
@@ -427,15 +421,13 @@ namespace reducto
  			{
  				float temp = a(i, j);
  				int out;
- 				if (temp >= 0)
-        			out = (int) (temp + 0.5); 
-    			else 
-        			out = (int) (temp - 0.5);
- 				std::cout << out << " ";
+				if (temp >= 0)
+					out = (int) (temp + 0.5);
+				else 
+					out = (int) (temp - 0.5);
  				outputFile << out << " ";
  			}
  			outputFile << "\n";
- 			std::cout << "\n";
  		}
 	}
 
