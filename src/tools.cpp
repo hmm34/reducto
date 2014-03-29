@@ -349,8 +349,6 @@ namespace reducto
  		int rank = memblock[5] * 256 + memblock[6];
  		std::cout << "rank is: " << rank << "\n";
 
- 		int index = bytesInHeader;
-
  		// Matrix U: m by m (height by height)
  		Eigen::MatrixXf u(height, height);
  		int k = 1;
@@ -417,7 +415,7 @@ namespace reducto
 
 		// Multiply matrices to get the original image in matrix A
 		Eigen::MatrixXf vT = v.transpose();
-		Eigen::MatrixXf a = (u * s * vT);
+		Eigen::MatrixXf a = (u * s) * vT;
 
 		std::cout << "u\n" << u << "\n";
 		std::cout << "s\n" << s << "\n";
@@ -437,7 +435,17 @@ namespace reducto
  		outputFile << maxPixel << "\n";
  		
  		// Approximate original image
- 		outputFile << a << "\n";
+ 		for (int i = 0; i < a.rows(); ++i)
+ 		{
+ 			for (int j = 0; j < a.cols(); ++j)
+ 			{
+ 				float temp = a(i, j);
+ 				int out = static_cast<int>(temp);
+ 				outputFile << out << " ";
+ 			}
+ 			outputFile << "\n";
+ 		}
+ 		//outputFile << a << "\n";
 	}
 
 }
