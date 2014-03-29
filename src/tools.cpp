@@ -153,12 +153,12 @@ namespace reducto
 		ss >> grayscale;			// Max
 
 		Eigen::MatrixXf a(height, width);
-		for (int yPos = 0; yPos < height; ++yPos)
+		for (int i = 0; i < height; ++i)
 		{
-			for (int xPos = 0; xPos < width; ++xPos) 
+			for (int j = 0; j < width; ++j) 
 			{
 				ss >> value;
-				a(yPos, xPos) = value;
+				a(i, j) = value;
 			}
 		}
 		inputFile.close();
@@ -181,7 +181,7 @@ namespace reducto
 		{
 			for (int j = 0; j < a.cols(); ++j)
 			{
-				int val = 0;
+				float val = 0;
 				if (i == j)
 					val = singularVals(i);
 				s(i, j) = val;
@@ -258,7 +258,6 @@ namespace reducto
 				// dimensions. the right side of U can be removed.
 				if (rank <= k) 
 				{
-					std::cerr << "COMPRESS U: " << temp << "\n";
 					output.write(reinterpret_cast<char*>(&temp), sizeof temp);
 					++rank;
 				}
@@ -282,7 +281,6 @@ namespace reducto
 				// removed
 				if (i == j && rank <= k) 
 				{
-					std::cerr << "COMPRESS SIGMA: " << temp << "\n";
 					output.write(reinterpret_cast<char*>(&temp), sizeof temp);
 					++rank;
 				}
@@ -305,7 +303,6 @@ namespace reducto
 				// dimensions. the right of V can be removed (bottom of V^T)
 				if (rank <= k) 
 				{
-					std::cerr << "COMPRESS V: " << temp << "\n";
 					output.write(reinterpret_cast<char*>(&temp), sizeof temp);
 					++rank;
 				}
@@ -360,11 +357,7 @@ namespace reducto
  				float val = 0;
  				if (k <= rank) {
  					inputFile.read(reinterpret_cast<char*>( &val ), sizeof val);
- 					std::cout << "Read to value... " << val << "\n";
  					++k;
- 				}
- 				else {
- 					std::cout << "NO READ.... " << val << "\n";
  				}
  				u(i, j) = val;
  			}
@@ -381,11 +374,7 @@ namespace reducto
  				if (k <= rank && i == j) 
  				{
  					inputFile.read(reinterpret_cast<char*>( &val ), sizeof val);
- 					std::cout << "Read to value... " << val << "\n";
  					++k;
- 				}
- 				else {
- 					std::cout << "NO READ.... " << val << "\n";
  				}
  				s(i, j) = val;
  			}
@@ -393,29 +382,25 @@ namespace reducto
 
  		// Matrix V: n by n (width by width)
  		Eigen::MatrixXf v(width, width);
- 		k = 1;
  		for (int i = 0; i < width; ++i)
  		{
+ 			k = 1;
  			for (int j = 0; j < width; ++j)
  			{
  				float val = 0;
  				if (k <= rank) {
  					inputFile.read(reinterpret_cast<char*>( &val ), sizeof val);
- 					std::cout << "Read to value... " << val << "\n";
 		 		}
-		 		else {
- 					std::cout << "NO READ.... " << val << "\n";
- 				}
  				v(i, j) = val;
+ 				++k;
  			}
- 			++k;
  		}
 
  		delete[] memblock;
 
 		// Multiply matrices to get the original image in matrix A
 		Eigen::MatrixXf vT = v.transpose();
-		Eigen::MatrixXf a = (u * s) * vT;
+		Eigen::MatrixXf a = u * s * vT;
 
 		std::cout << "u\n" << u << "\n";
 		std::cout << "s\n" << s << "\n";
@@ -435,17 +420,23 @@ namespace reducto
  		outputFile << maxPixel << "\n";
  		
  		// Approximate original image
+ 		std::cout << "a int" << "\n";
  		for (int i = 0; i < a.rows(); ++i)
  		{
  			for (int j = 0; j < a.cols(); ++j)
  			{
  				float temp = a(i, j);
- 				int out = static_cast<int>(temp);
+ 				int out;
+ 				if (temp >= 0)
+        			out = (int) (temp + 0.5); 
+    			else 
+        			out = (int) (temp - 0.5);
+ 				std::cout << out << " ";
  				outputFile << out << " ";
  			}
  			outputFile << "\n";
+ 			std::cout << "\n";
  		}
- 		//outputFile << a << "\n";
 	}
 
 }
