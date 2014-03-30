@@ -170,7 +170,6 @@ namespace reducto
 		Eigen::MatrixXf u(width, width), s(height, width), v(height, height);
 		Eigen::VectorXf singularVals;
 
-		std::cout << a << "\n";
 		Eigen::JacobiSVD<Eigen::MatrixXf> svdm(a, Eigen::ComputeThinU | Eigen::ComputeThinV);
 
 		u = svdm.matrixU();
@@ -199,7 +198,6 @@ namespace reducto
 		std::vector<unsigned char> buffer;
 
 		std::ifstream fheader(header.c_str());
-
 		if (!fheader)
 		{
 			std::cerr << "Could not open file " << header << "\n";
@@ -235,10 +233,9 @@ namespace reducto
 
 		int rank = 0;
 		std::ifstream fsvd(svd.c_str());
-
 		if (!fsvd)
 		{
-			std::cerr << "Could not open file " << svd << "\n";
+			std::cerr << "Could not open file " << svd << ".\n";
 			return;
 		}
 
@@ -414,7 +411,6 @@ namespace reducto
  		outputFile << maxPixel << "\n";
  		
  		// Approximate original image
- 		std::cout << "a int" << "\n";
  		for (int i = 0; i < a.rows(); ++i)
  		{
  			for (int j = 0; j < a.cols(); ++j)
@@ -429,6 +425,7 @@ namespace reducto
  			}
  			outputFile << "\n";
  		}
+ 		outputFile.close();
 	}
 
 }

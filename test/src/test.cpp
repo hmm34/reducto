@@ -150,42 +150,108 @@ void runStorageTests()
 	std::cout << "-------------- Storage Metrics --------------\n";
 	// Run storage tests and write to a CSV file [with AVERAGES - not all tests..]
 
+	int maxSize = 1000;
+	int maxSVD  = 1000;
+	int maxRank = 100;
+	std::string test1 = "test.pgm";
+
 	std::string resultFile = "storage-results.csv";
 	std::ofstream output(resultFile.c_str());
-	output << "total pixels, size of ascii file (bytes), ";
-	output << "size of compressed binary file (bytes), ";
-	output << "size of decompressed ascii file (bytes)\n";
 
-	std::string test1 = "test.pgm";
-	int maxSize = 1000;
+	output << "total pixels, ";
+	output << "size of ascii file (bytes), ";
+	output << "size of compressed binary file (bytes), ";
+	output << "size of decompressed ascii file (bytes), ";
+	output << "size of SVD.txt (bytes), ";
+	output << "rank, ";
+	output << "size of compressed binary SVD file (bytes), ";
+	output << "size of decompressed svd file ascii (bytes) \n";
+
 	for (int size = 50; size <= maxSize; size+=50)
 	{
+		// total pixels
 		output << size * size << ", ";
 
+		// size of ascii file (bytes)
 		createPGM(test1.c_str(), size, size);
 		struct stat ifilestatus;
 		stat(test1.c_str(), &ifilestatus);
 		output << ifilestatus.st_size << ", ";
 		reducto::asciiToBinary(test1);
-		remove(test1.c_str());
 
+		// size of compressed binary file (bytes)
 		std::string oFile1 = "test_b.pgm";
 		struct stat ofilestatus1;
 		stat(oFile1.c_str(), &ofilestatus1);
 		output << ofilestatus1.st_size << ", ";
 
+		// size of decompressed ascii file (bytes)
 		std::string oFile2 = "test2.pgm";
 		reducto::binaryToAscii(oFile1);
 		struct stat ofilestatus2;
 		stat(oFile2.c_str(), &ofilestatus2);
-		output << ofilestatus2.st_size << "\n";
+		output << ofilestatus2.st_size << ", ";
+
+		if (size <= maxSVD)
+		{
+			// size of SVD.txt (bytes)
+			reducto::asciiToSvd(test1);
+			std::string oFile3 = "test_svd.txt";
+			struct stat ofilestatus3;
+			stat(oFile3.c_str(), &ofilestatus3);
+			output << ofilestatus3.st_size << ", ";
+
+			for (int rank = 1; rank < maxRank; rank += 1)
+			{
+				// rank
+				output << rank << ", ";
+
+				// size of compressed binary SVD file (bytes)
+				reducto::svdCompress("test_header.txt", oFile3, rank);
+				std::string oFile4 = "image_b.pgm.svd";
+				struct stat ofilestatus4;
+				stat(oFile4.c_str(), &ofilestatus4);
+				output << ofilestatus4.st_size << ", ";
+
+				// size of decompressed svd file ascii (bytes)
+				reducto::svdDecompress(oFile4);
+				std::string oFile5 = "image_k.pgm";
+				struct stat ofilestatus5;
+				stat(oFile5.c_str(), &ofilestatus5);
+				output << ofilestatus5.st_size << "\n";
+
+
+				if (rank < maxRank - 1) 
+				{
+					output << size * size << ", ";
+					output << ifilestatus.st_size << ", ";
+					output << ofilestatus1.st_size << ", ";
+					output << ofilestatus2.st_size << ", ";
+					output << ofilestatus3.st_size << ", ";
+				}
+
+				remove(oFile4.c_str());
+				remove(oFile5.c_str());
+			}
+
+			remove(oFile3.c_str());
+		}
+		else
+		{
+			// empty rank, size of compressed binary SVD file (bytes),
+			// and size of decompressed svd file ascii (bytes)
+			output << ", , \n";
+		}
+
+		std::cerr << "2. Storage: " << size << " of " << maxSize << "\r";
 
 		remove(oFile1.c_str());
 		remove(oFile2.c_str());
-
-		std::cerr << "Storage: " << size << " of " << maxSize << "\r";
+		
 	}
+
 	std::cerr << "\n";
+	remove(test1.c_str());
 	output.close();
 }
 
